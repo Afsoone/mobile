@@ -1,40 +1,12 @@
-{
-    "sliderSets": [
-      {
-        "set1": [
-          {
-            "id": 1,
-            "image": "https://afsoone.ir/banner/slider/1.png",
-            "url": "https://www.afsoone.com/zool-baby/"
-          },
-          {
-            "id": 2,
-            "image": "https://afsoone.ir/banner/slider/2.png",
-            "url": "https://www.afsoone.com/zool-baby/"
-          },
-          {
-            "id": 3,
-            "image": "https://afsoone.ir/banner/slider/3.png",
-            "url": "https://www.afsoone.com/zool-baby/"
-          }
-        ],
-        "set2": [
-          {
-            "id": 4,
-            "image": "https://afsoone.ir/banner/slider/4.png",
-            "url": "https://www.afsoone.com"
-          },
-          {
-            "id": 5,
-            "image": "https://afsoone.ir/banner/slider/5.png",
-            "url": "https://www.afsoone.com"
-          },
-          {
-            "id": 6,
-            "image": "https://afsoone.ir/banner/slider/6.png",
-            "url": "https://www.afsoone.com"
-          }
-        ]
-      }
-    ]
-  }
+[
+  [
+    { "id": 1, "image": "https://afsoone.ir/banner/slider/1.png", "url": "https://www.afsoone.com" },
+    { "id": 2, "image": "https://afsoone.ir/banner/slider/2.png", "url": "https://www.afsoone.com" },
+    { "id": 3, "image": "https://afsoone.ir/banner/slider/3.png", "url": "https://www.afsoone.com" }
+  ],
+  [
+    { "id": 4, "image": "https://afsoone.ir/banner/slider/4.png", "url": "https://www.afsoone.com" },
+    { "id": 5, "image": "https://afsoone.ir/banner/slider/5.png", "url": "https://www.afsoone.com" },
+    { "id": 6, "image": "https://afsoone.ir/banner/slider/6.png", "url": "https://www.afsoone.com" }
+  ]
+]
