@@ -1,0 +1,46 @@
+{
+  "bottomButtons": [
+    {
+      "title": "انیمیشن",
+      "icon": "film-outline",
+      "url": "https://www.afsoone.com/Animation",
+      "position": "left"
+    },
+    {
+      "title": "کتابخانه",
+      "icon": "book-outline",
+      "url": "https://www.afsoone.com/digital-book",
+      "position": "left"
+    },
+    {
+      "title": "پادکست",
+      "icon": "mic-outline",
+      "url": "https://www.afsoone.com/music",
+      "position": "left"
+    },
+    {
+      "title": "خانه",
+      "icon": "home",
+      "url": "https://www.afsoone.com",
+      "position": "center"
+    },
+    {
+      "title": "سرگرمی",
+      "icon": "color-palette-outline",
+      "url": "https://www.afsoone.com/sargarmi",
+      "position": "right"
+    },
+    {
+      "title": "بازی",
+      "icon": "game-controller-outline",
+      "url": "https://www.afsoone.com/web-game",
+      "position": "right"
+    },
+    {
+      "title": "والدین",
+      "icon": "people-outline",
+      "url": "https://www.afsoone.com/adults",
+      "position": "right"
+    }
+  ]
+}

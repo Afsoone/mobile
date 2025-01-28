@@ -1,28 +1,46 @@
 {
   "expo": {
-    "name": "afsoone-app",
-    "slug": "afsoone-app",
-    "version": "1.0.0",
+    "name": "افسونه",
+    "slug": "afsoone",
+    "version": "1.4.0",
     "orientation": "portrait",
-    "icon": "./assets/icon.png",
+    "icon": "./assets/logo.png",
     "userInterfaceStyle": "light",
     "newArchEnabled": true,
+    "androidStatusBar": {
+      "backgroundColor": "#4B0082",
+      "translucent": false,
+      "barStyle": "light-content"
+    },
     "splash": {
-      "image": "./assets/splash-icon.png",
+      "image": "./assets/logo.png",
       "resizeMode": "contain",
-      "backgroundColor": "#ffffff"
+      "backgroundColor": "#4B0082"
     },
     "ios": {
       "supportsTablet": true
     },
     "android": {
+      "package": "com.eghbal.afsoone",
+      "permissions": ["INTERNET", "SYSTEM_ALERT_WINDOW", "VIBRATE"],
       "adaptiveIcon": {
-        "foregroundImage": "./assets/adaptive-icon.png",
-        "backgroundColor": "#ffffff"
+        "foregroundImage": "./assets/logo.png"
+      },
+      "softwareKeyboardLayoutMode": "pan",
+      "allowBackup": true,
+      "versionCode": 14,
+      "config": {
+        "googleMobileAdsAppId": ""
       }
     },
     "web": {
-      "favicon": "./assets/favicon.png"
+      "favicon": "./assets/logo.png"
+    },
+    "plugins": ["expo-font"],
+    "extra": {
+      "eas": {
+        "projectId": "1800ba80-526b-465e-9651-fc20dbd65339"
+      }
     }
   }
 }
