@@ -99,14 +99,15 @@ const App = () => {
       if (cached) {
         const { timestamp, data } = JSON.parse(cached);
         if (Date.now() - timestamp < SLIDER_CACHE_DURATION) {
-          setSliderItems(data);
+          const formattedData = [data.sliderSets[0].set1, data.sliderSets[0].set2];
+          setSliderItems(formattedData);
           return;
         }
       }
-
+  
       const response = await fetch(SLIDER_CONFIG_URL);
       const config = await response.json();
-
+  
       await AsyncStorage.setItem(
         SLIDER_CACHE_KEY,
         JSON.stringify({
@@ -114,8 +115,9 @@ const App = () => {
           data: config,
         })
       );
-
-      setSliderItems(config);
+  
+      const formattedData = [config.sliderSets[0].set1, config.sliderSets[0].set2];
+      setSliderItems(formattedData);
     } catch (error) {
       console.warn("Slider config fetch error:", error);
     }
