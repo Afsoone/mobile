@@ -361,7 +361,7 @@ const App = () => {
   return (
     <SafeAreaView style={styles.safeArea}>
       <StatusBar backgroundColor="#272052" barStyle="light-content"/>
-      <View style={s.container }>
+      <View style={styles.container }>
         {!isHomeScreen && (
           <View style={styles.topBar}>
             <View style={styles.topRight}>
@@ -374,7 +374,7 @@ const App = () => {
               </TouchableOpacity>
               <View style={styles.topcenter}>
               <Image
-                source={require("./assets/logo.png")}
+                source={require("./assets/type.png")}
                 style={styles.logo}
                 resizeMode="contain"
               />
@@ -468,8 +468,8 @@ const styles = {
     alignItems: "center",
   },
   logo: {
-    width: 30,
-    height: 30,
+    width: 50,
+    height: 50,
   },
   appName: {
     color: "white",
@@ -590,9 +590,10 @@ const styles = {
     alignItems: 'center',
   },
   logohome: {
-    width: 250,
-    height: 250,
-    marginTop: -60,
+    width: 250/3.5, 
+    height: 250/3.5, 
+    resizeMode: 'cover',   
+    marginTop: -85,
   },
   bannerContainer: {
     alignItems: 'center',

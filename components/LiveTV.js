@@ -1,62 +1,45 @@
-// components/LiveTV.js
-
 import React, { useState, useEffect, useRef } from 'react';
-import { View, Text, StyleSheet, ActivityIndicator } from 'react-native';
+import { View, Text, StyleSheet, ActivityIndicator, TouchableOpacity } from 'react-native';
 import { Video } from 'expo-av';
 import axios from 'axios';
 import moment from 'moment-timezone';
+import { Maximize2, Play, Pause } from 'lucide-react-native';
 
 const LiveTV = () => {
   const [schedule, setSchedule] = useState([]);
-  const [processedSchedule, setProcessedSchedule] = useState([]);
   const [currentShow, setCurrentShow] = useState(null);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState(null);
+  const [isPlaying, setIsPlaying] = useState(false);
   const videoRef = useRef(null);
 
-  const getVideoDuration = async (url) => {
-    try {
-      const { sound, status } = await Video.createAsync(
-        { uri: url },
-        { shouldPlay: false }
-      );
-      
-      if (status.isLoaded) {
-        const durationMillis = status.durationMillis;
-        await sound.unloadAsync(); // Clean up
-        return Math.floor(durationMillis / 1000); // Convert to seconds
-      }
-      
-      return null;
-    } catch (error) {
-      console.error('Error getting video duration:', error);
-      return null;
-    }
-  };
+  useEffect(() => {
+    fetchSchedule();
+    const interval = setInterval(fetchSchedule, 60 * 60 * 1000); // Refresh schedule every hour
+    return () => clearInterval(interval);
+  }, []);
 
-  const processSchedule = async (rawSchedule) => {
-    const processed = [];
-    
-    for (const show of rawSchedule) {
-      const duration = await getVideoDuration(show.url);
-      if (duration) {
-        processed.push({
-          ...show,
-          duration: duration
-        });
-      }
+  useEffect(() => {
+    if (schedule.length > 0) {
+      const show = calculateCurrentShow();
+      setCurrentShow(show);
+      setIsLoading(false);
     }
-    
-    return processed;
-  };
+  }, [schedule]);
+
+  useEffect(() => {
+    if (currentShow) {
+      playCurrentShow();
+    }
+  }, [currentShow]);
 
   const fetchSchedule = async () => {
     try {
       const response = await axios.get('https://raw.githubusercontent.com/Afsoone/mobile/main/tv.json');
-      setSchedule(response.data.programs);
-      
-      const processed = await processSchedule(response.data.programs);
-      setProcessedSchedule(processed);
+      setSchedule(response.data.programs.map(show => ({
+        ...show,
+        duration: show.duration || 300 // Default to 5 minutes if duration is missing
+      })));
       setError(null);
     } catch (err) {
       setError('Failed to load TV schedule');
@@ -64,74 +47,67 @@ const LiveTV = () => {
     }
   };
 
-  const findCurrentShow = () => {
-    if (!processedSchedule.length) return null;
+  const calculateCurrentShow = () => {
+    if (!schedule.length) return null;
 
     const tehranTime = moment().tz('Asia/Tehran');
-    const currentTimeSeconds = tehranTime.hours() * 3600 + tehranTime.minutes() * 60 + tehranTime.seconds();
+    const secondsSinceMidnight = tehranTime.hours() * 3600 + tehranTime.minutes() * 60 + tehranTime.seconds();
+    
+    const totalDuration = schedule.reduce((sum, show) => sum + show.duration, 0);
+    const elapsedTime = secondsSinceMidnight % totalDuration; // Loops back when all videos finish
 
-    let totalSeconds = 0;
-    for (let i = 0; i < processedSchedule.length; i++) {
-      const show = processedSchedule[i];
-      const showDuration = show.duration;
-      
-      if (currentTimeSeconds >= totalSeconds && 
-          currentTimeSeconds < (totalSeconds + showDuration)) {
-        
-        const secondsIntoShow = currentTimeSeconds - totalSeconds;
-        const millisecondsIntoShow = secondsIntoShow * 1000;
-        
-        return {
-          ...show,
-          startPosition: millisecondsIntoShow,
-          index: i
-        };
+    let accumulatedTime = 0;
+    for (let i = 0; i < schedule.length; i++) {
+      const show = schedule[i];
+      if (elapsedTime < accumulatedTime + show.duration) {
+        return { ...show, startPosition: (elapsedTime - accumulatedTime) * 1000, index: i };
       }
-      
-      totalSeconds += showDuration;
+      accumulatedTime += show.duration;
     }
-
-    return {
-      ...processedSchedule[0],
-      startPosition: 0,
-      index: 0
-    };
+    
+    return { ...schedule[0], startPosition: 0, index: 0 }; // Default to first show
   };
 
-  const playNextShow = async (nextIndex) => {
-    if (!processedSchedule.length) return;
-    
-    const nextShowIndex = nextIndex >= processedSchedule.length ? 0 : nextIndex;
-    const show = {
-      ...processedSchedule[nextShowIndex],
-      startPosition: 0,
-      index: nextShowIndex
-    };
-    
-    setCurrentShow(show);
+  const onPlaybackStatusUpdate = async (status) => {
+    if (status.didJustFinish) {
+      let nextIndex = (currentShow.index + 1) % schedule.length; // Loop back to first show
+      setCurrentShow({ ...schedule[nextIndex], startPosition: 0, index: nextIndex });
+    }
   };
 
-  useEffect(() => {
-    fetchSchedule();
-    const scheduleInterval = setInterval(fetchSchedule, 1000 * 60 * 60); // Refresh schedule every hour
-    
-    return () => clearInterval(scheduleInterval);
-  }, []);
-
-  useEffect(() => {
-    if (processedSchedule.length > 0) {
-      const show = findCurrentShow();
-      setCurrentShow(show);
-      setIsLoading(false);
-
-      const syncInterval = setInterval(() => {
-        const updatedShow = findCurrentShow();
-        setCurrentShow(updatedShow);
-      }, 1000);
-
-      return () => clearInterval(syncInterval);
+  const playCurrentShow = async () => {
+    if (videoRef.current) {
+      try {
+        await videoRef.current.stopAsync();
+        await videoRef.current.setPositionAsync(currentShow.startPosition);
+        await videoRef.current.playAsync();
+        setIsPlaying(true);
+      } catch (error) {
+        console.error("Error playing video:", error);
+      }
     }
-  }, [processedSchedule]);
+  };
+
+  const togglePlayPause = async () => {
+    if (videoRef.current) {
+      try {
+        if (isPlaying) {
+          await videoRef.current.pauseAsync();
+        } else {
+          await videoRef.current.playAsync();
+        }
+        setIsPlaying(!isPlaying);
+      } catch (error) {
+        console.error("Error toggling play:", error);
+      }
+    }
+  };
+
+  const toggleFullscreen = async () => {
+    if (videoRef.current) {
+      await videoRef.current.presentFullscreenPlayer();
+    }
+  };
 
   if (isLoading) {
     return (
@@ -151,27 +127,31 @@ const LiveTV = () => {
 
   return (
     <View style={styles.container}>
-      <Text style={styles.nowPlaying}>
-        در حال پخش: {currentShow?.name}
-      </Text>
-      {currentShow && (
-        <Video
-          ref={videoRef}
-          source={{ uri: currentShow.url }}
-          rate={1.0}
-          volume={1.0}
-          isMuted={false}
-          resizeMode="contain"
-          shouldPlay={true}
-          positionMillis={currentShow.startPosition}
-          onPlaybackStatusUpdate={status => {
-            if (status.didJustFinish) {
-              playNextShow(currentShow.index + 1);
-            }
-          }}
-          style={styles.video}
-        />
-      )}
+      <Text style={styles.nowPlaying}>در حال پخش: {currentShow?.name}</Text>
+      <View style={styles.videoContainer}>
+        {currentShow && (
+          <Video
+            ref={videoRef}
+            source={{ uri: currentShow.url }}
+            rate={1.0}
+            volume={1.0}
+            isMuted={false}
+            resizeMode="contain"
+            shouldPlay={true}
+            positionMillis={currentShow.startPosition}
+            onPlaybackStatusUpdate={onPlaybackStatusUpdate}
+            style={styles.video}
+          />
+        )}
+        <View style={styles.controls}>
+          <TouchableOpacity onPress={togglePlayPause} style={styles.controlButton}>
+            {isPlaying ? <Pause color="#DAB9FF" size={24} /> : <Play color="#DAB9FF" size={24} />}
+          </TouchableOpacity>
+          <TouchableOpacity onPress={toggleFullscreen} style={styles.controlButton}>
+            <Maximize2 color="#DAB9FF" size={24} />
+          </TouchableOpacity>
+        </View>
+      </View>
     </View>
   );
 };
@@ -184,6 +164,10 @@ const styles = StyleSheet.create({
     marginVertical: 10,
     borderRadius: 8,
     overflow: 'hidden',
+  },
+  videoContainer: {
+    flex: 1,
+    position: 'relative',
   },
   video: {
     width: '100%',
@@ -201,6 +185,19 @@ const styles = StyleSheet.create({
     textAlign: 'center',
     padding: 20,
     fontFamily: 'aviny',
+  },
+  controls: {
+    position: 'absolute',
+    bottom: 0,
+    left: 0,
+    right: 0,
+    flexDirection: 'row',
+    padding: 10,
+    backgroundColor: 'rgba(0, 0, 0, 0.5)',
+  },
+  controlButton: {
+    marginRight: 15,
+    padding: 5,
   }
 });
 

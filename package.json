@@ -18,6 +18,7 @@
     "expo-font": "~13.0.2",
     "expo-linear-gradient": "^14.0.2",
     "expo-status-bar": "~2.0.0",
+    "lucide-react-native": "^0.474.0",
     "moment-timezone": "^0.5.47",
     "react": "18.3.1",
     "react-native": "0.76.5",
