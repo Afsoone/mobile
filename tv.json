@@ -1,0 +1,14 @@
+{
+    "programs": [
+      {
+        "name": "انیمیشن اول",
+        "url": "https://your-video-url.com/video1.mp4",
+        "duration": "30"
+      },
+      {
+        "name": "انیمیشن دوم",
+        "url": "https://your-video-url.com/video2.mp4",
+        "duration": "45"
+      }
+    ]
+  }

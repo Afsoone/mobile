@@ -18,6 +18,7 @@ import { SafeAreaView } from "react-native-safe-area-context";
 import OrientationLocker from "react-native-orientation-locker";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { LinearGradient } from 'expo-linear-gradient';
+import LiveTV from './components/LiveTV';
 
 const REMOTE_CONFIG_URL = "https://raw.githubusercontent.com/Afsoone/mobile/main/app-config.json";
 const CONFIG_CACHE_KEY = "app_config_cache";
@@ -245,7 +246,7 @@ const App = () => {
       <View style={styles.imagecont}>
         <Image source={require('./assets/logo.png')} style={styles.logohome} />
       </View>
-
+      <LiveTV />
       {/* Banner */}
       <View style={styles.bannerContainer}>
         <Image 
@@ -360,7 +361,7 @@ const App = () => {
   return (
     <SafeAreaView style={styles.safeArea}>
       <StatusBar backgroundColor="#272052" barStyle="light-content"/>
-      <View style={styles.container }>
+      <View style={s.container }>
         {!isHomeScreen && (
           <View style={styles.topBar}>
             <View style={styles.topRight}>
