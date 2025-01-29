@@ -1,14 +1,12 @@
 {
     "programs": [
       {
-        "name": "انیمیشن اول",
-        "url": "https://your-video-url.com/video1.mp4",
-        "duration": "30"
+        "name": "انیمیشن پری قسمت اول",
+        "url": "https://afsoone.ir/animation/pari/1.mp4"
       },
       {
-        "name": "انیمیشن دوم",
-        "url": "https://your-video-url.com/video2.mp4",
-        "duration": "45"
+        "name": "انیمیشن پری قسمت دوم",
+        "url": "https://afsoone.ir/animation/pari/2.mp4"
       }
     ]
   }

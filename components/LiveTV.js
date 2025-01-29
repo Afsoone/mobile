@@ -1,3 +1,5 @@
+// components/LiveTV.js
+
 import React, { useState, useEffect, useRef } from 'react';
 import { View, Text, StyleSheet, ActivityIndicator } from 'react-native';
 import { Video } from 'expo-av';
@@ -6,15 +8,55 @@ import moment from 'moment-timezone';
 
 const LiveTV = () => {
   const [schedule, setSchedule] = useState([]);
+  const [processedSchedule, setProcessedSchedule] = useState([]);
   const [currentShow, setCurrentShow] = useState(null);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState(null);
   const videoRef = useRef(null);
 
+  const getVideoDuration = async (url) => {
+    try {
+      const { sound, status } = await Video.createAsync(
+        { uri: url },
+        { shouldPlay: false }
+      );
+      
+      if (status.isLoaded) {
+        const durationMillis = status.durationMillis;
+        await sound.unloadAsync(); // Clean up
+        return Math.floor(durationMillis / 1000); // Convert to seconds
+      }
+      
+      return null;
+    } catch (error) {
+      console.error('Error getting video duration:', error);
+      return null;
+    }
+  };
+
+  const processSchedule = async (rawSchedule) => {
+    const processed = [];
+    
+    for (const show of rawSchedule) {
+      const duration = await getVideoDuration(show.url);
+      if (duration) {
+        processed.push({
+          ...show,
+          duration: duration
+        });
+      }
+    }
+    
+    return processed;
+  };
+
   const fetchSchedule = async () => {
     try {
-      const response = await axios.get('https://raw.githubusercontent.com/YourUsername/YourRepo/main/tv.json');
+      const response = await axios.get('https://raw.githubusercontent.com/Afsoone/mobile/main/tv.json');
       setSchedule(response.data.programs);
+      
+      const processed = await processSchedule(response.data.programs);
+      setProcessedSchedule(processed);
       setError(null);
     } catch (err) {
       setError('Failed to load TV schedule');
@@ -23,22 +65,21 @@ const LiveTV = () => {
   };
 
   const findCurrentShow = () => {
-    if (!schedule.length) return null;
+    if (!processedSchedule.length) return null;
 
     const tehranTime = moment().tz('Asia/Tehran');
-    const currentTimeMinutes = tehranTime.hours() * 60 + tehranTime.minutes();
+    const currentTimeSeconds = tehranTime.hours() * 3600 + tehranTime.minutes() * 60 + tehranTime.seconds();
 
-    let totalMinutes = 0;
-    for (let i = 0; i < schedule.length; i++) {
-      const show = schedule[i];
-      const showDuration = parseInt(show.duration);
+    let totalSeconds = 0;
+    for (let i = 0; i < processedSchedule.length; i++) {
+      const show = processedSchedule[i];
+      const showDuration = show.duration;
       
-      if (currentTimeMinutes >= totalMinutes && 
-          currentTimeMinutes < (totalMinutes + showDuration)) {
+      if (currentTimeSeconds >= totalSeconds && 
+          currentTimeSeconds < (totalSeconds + showDuration)) {
         
-        // Calculate how many minutes into the show we are
-        const minutesIntoShow = currentTimeMinutes - totalMinutes;
-        const millisecondsIntoShow = minutesIntoShow * 60 * 1000;
+        const secondsIntoShow = currentTimeSeconds - totalSeconds;
+        const millisecondsIntoShow = secondsIntoShow * 1000;
         
         return {
           ...show,
@@ -47,23 +88,22 @@ const LiveTV = () => {
         };
       }
       
-      totalMinutes += showDuration;
+      totalSeconds += showDuration;
     }
 
-    // If we're past the last show, start from beginning
     return {
-      ...schedule[0],
+      ...processedSchedule[0],
       startPosition: 0,
       index: 0
     };
   };
 
   const playNextShow = async (nextIndex) => {
-    if (!schedule.length) return;
+    if (!processedSchedule.length) return;
     
-    const nextShowIndex = nextIndex >= schedule.length ? 0 : nextIndex;
+    const nextShowIndex = nextIndex >= processedSchedule.length ? 0 : nextIndex;
     const show = {
-      ...schedule[nextShowIndex],
+      ...processedSchedule[nextShowIndex],
       startPosition: 0,
       index: nextShowIndex
     };
@@ -79,12 +119,19 @@ const LiveTV = () => {
   }, []);
 
   useEffect(() => {
-    if (schedule.length > 0) {
+    if (processedSchedule.length > 0) {
       const show = findCurrentShow();
       setCurrentShow(show);
       setIsLoading(false);
+
+      const syncInterval = setInterval(() => {
+        const updatedShow = findCurrentShow();
+        setCurrentShow(updatedShow);
+      }, 1000);
+
+      return () => clearInterval(syncInterval);
     }
-  }, [schedule]);
+  }, [processedSchedule]);
 
   if (isLoading) {
     return (
