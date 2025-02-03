@@ -1,9 +1,11 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { View, Text, StyleSheet, ActivityIndicator, TouchableOpacity } from 'react-native';
+import { View, Text, StyleSheet, ActivityIndicator, TouchableOpacity, Dimensions } from 'react-native';
+import { Ionicons } from '@expo/vector-icons';
 import { Video } from 'expo-av';
 import axios from 'axios';
 import moment from 'moment-timezone';
-import { Maximize2, Play, Pause } from 'lucide-react-native';
+
+const { width: SCREEN_WIDTH } = Dimensions.get('window');
 
 const LiveTV = () => {
   const [schedule, setSchedule] = useState([]);
@@ -54,23 +56,27 @@ const LiveTV = () => {
     const secondsSinceMidnight = tehranTime.hours() * 3600 + tehranTime.minutes() * 60 + tehranTime.seconds();
     
     const totalDuration = schedule.reduce((sum, show) => sum + show.duration, 0);
-    const elapsedTime = secondsSinceMidnight % totalDuration; // Loops back when all videos finish
+    const elapsedTime = secondsSinceMidnight % totalDuration;
 
     let accumulatedTime = 0;
     for (let i = 0; i < schedule.length; i++) {
       const show = schedule[i];
       if (elapsedTime < accumulatedTime + show.duration) {
-        return { ...show, startPosition: (elapsedTime - accumulatedTime) * 1000, index: i };
+        return { 
+          ...show, 
+          startPosition: (elapsedTime - accumulatedTime) * 1000, 
+          index: i 
+        };
       }
       accumulatedTime += show.duration;
     }
     
-    return { ...schedule[0], startPosition: 0, index: 0 }; // Default to first show
+    return { ...schedule[0], startPosition: 0, index: 0 };
   };
 
   const onPlaybackStatusUpdate = async (status) => {
     if (status.didJustFinish) {
-      let nextIndex = (currentShow.index + 1) % schedule.length; // Loop back to first show
+      let nextIndex = (currentShow.index + 1) % schedule.length;
       setCurrentShow({ ...schedule[nextIndex], startPosition: 0, index: nextIndex });
     }
   };
@@ -109,6 +115,11 @@ const LiveTV = () => {
     }
   };
 
+  const handleRefresh = () => {
+    setIsLoading(true);
+    fetchSchedule();
+  };
+
   if (isLoading) {
     return (
       <View style={styles.container}>
@@ -121,13 +132,19 @@ const LiveTV = () => {
     return (
       <View style={styles.container}>
         <Text style={styles.errorText}>{error}</Text>
+        <TouchableOpacity onPress={handleRefresh} style={styles.refreshButton}>
+          <Ionicons name="refresh" size={24} color="#DAB9FF" />
+          <Text style={styles.refreshButtonText}>تلاش مجدد</Text>
+        </TouchableOpacity>
       </View>
     );
   }
 
   return (
     <View style={styles.container}>
-      <Text style={styles.nowPlaying}>در حال پخش: {currentShow?.name}</Text>
+      <View style={styles.headerContainer}>
+        <Text style={styles.nowPlaying}>در حال پخش: {currentShow?.name}</Text>
+      </View>
       <View style={styles.videoContainer}>
         {currentShow && (
           <Video
@@ -144,11 +161,27 @@ const LiveTV = () => {
           />
         )}
         <View style={styles.controls}>
-          <TouchableOpacity onPress={togglePlayPause} style={styles.controlButton}>
-            {isPlaying ? <Pause color="#DAB9FF" size={24} /> : <Play color="#DAB9FF" size={24} />}
+          <TouchableOpacity 
+            onPress={togglePlayPause} 
+            style={styles.controlButton}
+            hitSlop={{ top: 10, bottom: 10, left: 10, right: 10 }}
+          >
+            <Ionicons 
+              name={isPlaying ? "pause" : "play"} 
+              size={28} 
+              color="#DAB9FF" 
+            />
           </TouchableOpacity>
-          <TouchableOpacity onPress={toggleFullscreen} style={styles.controlButton}>
-            <Maximize2 color="#DAB9FF" size={24} />
+          <TouchableOpacity 
+            onPress={toggleFullscreen} 
+            style={styles.controlButton}
+            hitSlop={{ top: 10, bottom: 10, left: 10, right: 10 }}
+          >
+            <Ionicons 
+              name="expand" 
+              size={28} 
+              color="#DAB9FF" 
+            />
           </TouchableOpacity>
         </View>
       </View>
@@ -158,15 +191,24 @@ const LiveTV = () => {
 
 const styles = StyleSheet.create({
   container: {
-    width: '100%',
-    height: 200,
+    width: SCREEN_WIDTH * 0.85, // Slightly adjusted width
+    alignSelf: 'center',
     backgroundColor: '#272052',
     marginVertical: 10,
-    borderRadius: 8,
+    borderRadius: 15,
     overflow: 'hidden',
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 4 },
+    shadowOpacity: 0.2,
+    shadowRadius: 5,
+    elevation: 6,
+  },
+  headerContainer: {
+    backgroundColor: 'rgba(39, 32, 82, 0.8)',
+    paddingVertical: 8,
   },
   videoContainer: {
-    flex: 1,
+    aspectRatio: 16/9,
     position: 'relative',
   },
   video: {
@@ -176,7 +218,6 @@ const styles = StyleSheet.create({
   nowPlaying: {
     color: '#DAB9FF',
     textAlign: 'center',
-    padding: 5,
     fontFamily: 'aviny',
     fontSize: 16,
   },
@@ -198,6 +239,22 @@ const styles = StyleSheet.create({
   controlButton: {
     marginRight: 15,
     padding: 5,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  refreshButton: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    alignSelf: 'center',
+    backgroundColor: 'rgba(218, 185, 255, 0.2)',
+    padding: 10,
+    borderRadius: 8,
+    marginTop: 15,
+  },
+  refreshButtonText: {
+    color: '#DAB9FF',
+    marginLeft: 10,
+    fontFamily: 'aviny',
   }
 });
 

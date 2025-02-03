@@ -246,7 +246,10 @@ const App = () => {
       <View style={styles.imagecont}>
         <Image source={require('./assets/logo.png')} style={styles.logohome} />
       </View>
-      <LiveTV />
+      <View  style={styles.live}>
+        <LiveTV />
+      </View>
+
       {/* Banner */}
       <View style={styles.bannerContainer}>
         <Image 
@@ -595,6 +598,11 @@ const styles = {
     resizeMode: 'cover',   
     marginTop: -85,
   },
+  live: {
+    flex: 1, 
+    alignItems: 'center', 
+    justifyContent: 'center', 
+  },
   bannerContainer: {
     alignItems: 'center',
     marginBottom: 20,
@@ -606,7 +614,7 @@ const styles = {
     borderRadius: 18,
   },
   sliderContainer: {
-    marginBottom: 20,
+    marginBottom: 18,
     paddingHorizontal: 10,
   },
   sliderContent: {
