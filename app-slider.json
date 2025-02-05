@@ -22,17 +22,17 @@
         {
           "id": 4,
           "image": "https://afsoone.ir/banner/slider/4.png",
-          "url": "https://afsoone.ir/animation/ravayatshenidani/1.mp4"
+          "url": "/https://www.afsoone.com/ravayatshenidani"
         },
         {
           "id": 5,
           "image": "https://afsoone.ir/banner/slider/5.png",
-          "url": "https://afsoone.ir/animation/ghesehayequrani/1.mp4"
+          "url": "/https://www.afsoone.com/ghesehayequrani"
         },
         {
           "id": 6,
           "image": "https://afsoone.ir/banner/slider/6.png",
-          "url": "https://afsoone.ir/animation/mostanad/1.mp4"
+          "url": "/https://www.afsoone.com/mostanad"
         }
       ]
     }
