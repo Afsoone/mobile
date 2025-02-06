@@ -10,29 +10,29 @@
         {
           "id": 2,
           "image": "https://afsoone.ir/banner/slider/2.png",
-          "url": "/https://www.afsoone.com/khaneroyaei"
+          "url": "https://www.afsoone.com/khaneroyaei"
         },
         {
           "id": 3,
           "image": "https://afsoone.ir/banner/slider/3.png",
-          "url": "https://afsoone.ir/animation/robidanesh/1.mp4"
+          "url": "https://afsoone.ir/animation/robidanesh"
         }
       ],
       "set2": [
         {
           "id": 4,
           "image": "https://afsoone.ir/banner/slider/4.png",
-          "url": "/https://www.afsoone.com/ravayatshenidani"
+          "url": "https://www.afsoone.com/ravayatshenidani"
         },
         {
           "id": 5,
           "image": "https://afsoone.ir/banner/slider/5.png",
-          "url": "/https://www.afsoone.com/ghesehayequrani"
+          "url": "https://www.afsoone.com/ghesehayequrani"
         },
         {
           "id": 6,
           "image": "https://afsoone.ir/banner/slider/6.png",
-          "url": "/https://www.afsoone.com/mostanad"
+          "url": "https://www.afsoone.com/mostanad"
         }
       ]
     }
