@@ -75,7 +75,7 @@ const App = () => {
 
   const [sliderItems, setSliderItems] = useState([
     [
-      { id: 1, image: 'https://afsoone.ir/banner/slider/1.svg', url: 'https://www.afsoone.com' },
+      { id: 1, image: 'https://afsoone.ir/banner/slider/1.png', url: 'https://www.afsoone.com' },
       { id: 2, image: 'https://afsoone.ir/banner/slider/2.png', url: 'https://www.afsoone.com' },
       { id: 3, image: 'https://afsoone.ir/banner/slider/3.png', url: 'https://www.afsoone.com' },
     ],

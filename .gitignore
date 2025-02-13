@@ -17,6 +17,7 @@ expo-env.d.ts
 *.key
 *.mobileprovision
 
+
 # Metro
 .metro-health-check*
 
@@ -37,3 +38,6 @@ yarn-error.*
 
 afsoone-v1-signed.apk
 afsoone-v2-signed.apk
+
+#safety
+credentials.json
