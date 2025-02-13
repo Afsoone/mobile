@@ -235,6 +235,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     padding: 10,
     backgroundColor: 'rgba(0, 0, 0, 0.5)',
+    height: 30, 
   },
   controlButton: {
     marginRight: 15,

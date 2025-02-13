@@ -22,7 +22,11 @@
     },
     "android": {
       "package": "com.eghbal.afsoone",
-      "permissions": ["INTERNET", "SYSTEM_ALERT_WINDOW", "VIBRATE"],
+      "permissions": [
+        "INTERNET",
+        "SYSTEM_ALERT_WINDOW",
+        "VIBRATE"
+      ],
       "adaptiveIcon": {
         "foregroundImage": "./assets/logo.png"
       },
@@ -36,7 +40,11 @@
     "web": {
       "favicon": "./assets/logo.png"
     },
-    "plugins": ["expo-font"],
+    "plugins": [
+      "expo-font",
+      "react-native-video",
+      "expo-video"
+    ],
     "extra": {
       "eas": {
         "projectId": "1800ba80-526b-465e-9651-fc20dbd65339"

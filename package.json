@@ -15,10 +15,12 @@
     "@react-native-async-storage/async-storage": "^2.1.0",
     "axios": "^1.7.9",
     "expo": "~52.0.20",
-    "expo-av": "~15.0.2",
+    "expo-av": "~15.0.1",
     "expo-font": "~13.0.2",
     "expo-linear-gradient": "^14.0.2",
+    "expo-screen-orientation": "~8.0.2",
     "expo-status-bar": "~2.0.0",
+    "expo-video": "~2.0.5",
     "lucide-react-native": "^0.474.0",
     "moment-timezone": "^0.5.47",
     "react": "18.3.1",
@@ -26,6 +28,7 @@
     "react-native-orientation-locker": "^1.7.0",
     "react-native-safe-area-context": "^5.0.0",
     "react-native-vector-icons": "^10.2.0",
+    "react-native-video": "^6.10.0",
     "react-native-webview": "^13.12.5"
   },
   "devDependencies": {
