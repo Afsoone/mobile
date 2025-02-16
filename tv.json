@@ -1,12 +1,40 @@
 {
-    "programs": [
-      {
-        "name": "انیمیشن پری قسمت اول",
-        "url": "https://afsoone.ir/animation/pari/1.mp4"
-      },
-      {
-        "name": "انیمیشن پری قسمت دوم",
-        "url": "https://afsoone.ir/animation/pari/2.mp4"
-      }
-    ]
-  }
+  "programs": [
+    {
+      "name": "انیمیشن پری قسمت دوم",
+      "url": "https://afsoone.ir/animation/pari/2.mp4"
+    },
+    {
+      "name": "انیمیشن  خانه رویایی قسمت دوم",
+      "url": "https://afsoone.ir/animation/khaneroyaei/2.mp4"
+    },
+    {
+      "name": "روبی دانش قسمت دوم",
+      "url": "https://afsoone.ir/animation/robidanesh/2.mp4"
+    },
+    {
+      "name": "روایت های شنیدنی قسمت دوم",
+      "url": "https://afsoone.ir/animation/ravayatshenidani/2.mp4"
+    },
+    {
+      "name": "قصه های قرآنی قسمت دوم",
+      "url": "https://afsoone.ir/animation/ghesehayequrani/2.mp4"
+    },
+    {
+      "name": "مستند قسمت دوم",
+      "url": "https://afsoone.ir/animation/mostanad/2.mp4"
+    },
+    {
+      "name": "سینمایی ربات وحشی ",
+      "url": ""
+    },
+    {
+      "name": "سینمایی اژدهای آرزو",
+      "url": ""
+    },
+    {
+      "name": "شگفتی آفرینش",
+      "url": ""
+    }
+  ]
+}
